@@ -1,0 +1,39 @@
+# Fails on purpose. Wire AegisOps: workflow_run → /webhooks/github (HMAC) or Bearer /webhooks/ingress.
+name: Incident demo CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      incident:
+        description: "Which fake failure"
+        type: choice
+        options:
+          - test-failure
+          - peer-dependency
+          - missing-env
+        default: test-failure
+  push:
+    branches: [main]
+    paths:
+      - "**"
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install
+      - name: Dispatch incident
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          case "${{ inputs.incident }}" in
+            peer-dependency) npm run incident:peer ;;
+            missing-env) npm run incident:env ;;
+            *) npm run incident:test ;;
+          esac
+      - name: Default (push) — failed test
+        if: github.event_name != 'workflow_dispatch'
+        run: npm run incident:test

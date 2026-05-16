@@ -1,0 +1,2 @@
+AegisOps drill — intentional push to fire failing CI (npm run incident:test).
+trigger_id=2026-05-15-drill-01

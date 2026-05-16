@@ -1,0 +1,15 @@
+{
+  "name": "incident-test",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Failing CI on purpose — pair with AegisOps GitHub/Jenkins webhooks",
+  "scripts": {
+    "incident:test": "node --test test/incident.test.mjs",
+    "incident:peer": "node scripts/fake-peer-resolve-fail.mjs",
+    "incident:env": "node scripts/fake-missing-env-fail.mjs",
+    "ci": "npm run incident:test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
